@@ -22,7 +22,7 @@ public class ServletNear extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		Double radius = 250.0;
+		Double radius = (Double) request.getServletContext().getAttribute("radiusDistance");
 		if ( request.getParameter("srcLat") != null &&
 				request.getParameter("srcLng") != null &&
 				request.getParameter("dstLat") != null &&

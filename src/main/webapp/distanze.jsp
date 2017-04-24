@@ -67,7 +67,7 @@ Boolean debug = ( request.getParameter("debug") != null);
         	latLngClick1 = popLocation;
         	L.marker(popLocation,{icon: srcIcon}).addTo(mymap).bindPopup("Partenza");
         	<% if (debug) { %>
-    		L.circle(popLocation, 250).addTo(mymap);
+    		L.circle(popLocation, <%=request.getServletContext().getAttribute("radiusDistance")%>).addTo(mymap);
     	<% } %>
        	}
         else if ( latLngClick2 == null)
@@ -76,7 +76,7 @@ Boolean debug = ( request.getParameter("debug") != null);
         	L.marker(popLocation,{icon: dstIcon}).addTo(mymap).bindPopup("Destinazione");
         	near(latLngClick1,latLngClick2);
         	<% if (debug) { %>
-        		L.circle(popLocation, 250).addTo(mymap);
+        		L.circle(popLocation, <%=request.getServletContext().getAttribute("radiusDistance")%>).addTo(mymap);
         	<% } %>
         }
     });

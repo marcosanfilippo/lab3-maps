@@ -20,6 +20,7 @@ public class OurWebListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		
+		sce.getServletContext().setAttribute("radiusDistance",250.0);
 		try
 		{
 			
