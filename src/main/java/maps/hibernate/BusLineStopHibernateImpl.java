@@ -28,12 +28,10 @@ public class BusLineStopHibernateImpl implements BusLineStop {
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "stopId", nullable = false)
-	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 	BusStopHibernateImpl busStop;
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "lineId", nullable = false)
-	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="line")
 	BusLineHibernateImpl busLine;
 	@Column(name = "sequenceNumber")
 	Short sequence;

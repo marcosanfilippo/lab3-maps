@@ -8,6 +8,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -39,6 +40,7 @@ create table if not exists BusLineStop (
 
 @Entity
 @Table(name="BusStop")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class BusStopHibernateImpl implements BusStop {
 
 	@Id
@@ -57,6 +59,7 @@ public class BusStopHibernateImpl implements BusStop {
 	private Point latLng;
 	
 	@OneToMany(mappedBy = "busStop")
+	@JsonIgnore
 	private List<BusLineStopHibernateImpl> busLineStops;
 	
 	public BusStopHibernateImpl()  {

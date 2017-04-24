@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import maps.interfaces.BusLine;
 import maps.interfaces.BusLineStop;
 
@@ -27,6 +31,7 @@ import maps.interfaces.BusLineStop;
 
 @Entity
 @Table(name="BusLine")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="line")
 public class BusLineHibernateImpl implements BusLine {
 
 	@Id
@@ -35,6 +40,7 @@ public class BusLineHibernateImpl implements BusLine {
 	@Column(name="description")
 	private String description;
 	@OneToMany(mappedBy = "busLine")
+	@JsonIgnore
 	private List<BusLineStopHibernateImpl> busLineStops;
 	
 	public BusLineHibernateImpl()  {

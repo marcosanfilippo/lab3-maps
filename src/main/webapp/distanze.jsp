@@ -33,9 +33,26 @@ Boolean debug = ( request.getParameter("debug") != null);
 	var mymap = L.map('mapid').setView([45.0635138,7.6565683], 13);
 	var latLngClick1=null;
 	var latLngClick2=null;
-	var srcIcon = new L.Icon({iconUrl: ' http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF'});
-    var dstIcon = new L.Icon({iconUrl: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|e85141&chf=a,s,ee00FFFF'});
-    var stopIcon = new L.Icon({iconUrl: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF'});
+	var srcIcon = new L.Icon({
+			iconUrl: ' http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF',
+		    iconSize: [21, 34], // size of the icon
+		    iconAnchor: [10, 34], // point of the icon which will correspond to marker's location
+		    popupAnchor: [0, -34] // point from which the popup should open relative to the iconAnchor                                 
+	});
+    var dstIcon = new L.Icon(
+    	{
+    		iconUrl: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|e85141&chf=a,s,ee00FFFF',
+   		    iconSize: [21, 34], // size of the icon
+   		    iconAnchor: [10, 34], // point of the icon which will correspond to marker's location
+   		    popupAnchor: [0,-34] // point from which the popup should open relative to the iconAnchor                                 
+    	});
+    var stopIcon = new L.Icon(
+    	{
+    		iconUrl: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF',
+     		iconSize: [21, 34], // size of the icon
+     		iconAnchor: [10, 34], // point of the icon which will correspond to marker's location
+     		popupAnchor: [0, -34] // point from which the popup should open relative to the iconAnchor 
+   		});
 
 	//Layer OpenStreetMap
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -72,17 +89,15 @@ Boolean debug = ( request.getParameter("debug") != null);
 				dataType: 'json',
 				success: function(data, textStatus, jqXHR)
 				{
-					latlngs=[];
 					$.each(data,function(stop_index,stop)
 							{
-								msg = "Fermata <b>"+stop.name+"</b><br>";
+								msg = "Fermata <b>"+stop.name.replace("'","\'")+" "+stop.lat+" "+stop.lng+"</b><br>";
 								//$.each(stop.lines,function(line_index,line))
 								//{
 								//	msg += "Linea <b>"+line.name+"</b> ("+line.description+")<br>";
 								//}
 								L.marker([stop.lat,stop.lng],{icon: stopIcon}).addTo(mymap)
 									.bindPopup(msg);
-								latlngs.push(L.latLng(stop.lat,stop.lng));
 							});
 					//polyline = L.polyline(latlngs, {color: 'red'}).addTo(mymap);
 					//mymap.fitBounds(polyline.getBounds());
@@ -102,7 +117,7 @@ Boolean debug = ( request.getParameter("debug") != null);
 		for(Entry e : busStopService.getAll().entrySet())
 		{
 			BusStop bs =  (BusStop)e.getValue();
-			String msg = "Fermata <b>"+bs.getName().replace("'","\\'")+"</b><br>";
+			String msg = "Fermata <b>"+bs.getName().replace("'","\\'")+" "+bs.getLat()+" "+bs.getLng()+"</b><br>";
 			%>
 			L.marker([<%=bs.getLat()%> ,<%= bs.getLng()%> ]).addTo(mymap)
 				.bindPopup('<%=msg%>');
