@@ -1,8 +1,10 @@
-package maps.hibernate.service;
+package maps.service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,13 +43,19 @@ public class BusLineServiceHibernateImpl implements BusLineService {
 
 	@Override
 	public BusLine getBusLine(String line) {
-		
 		Session session=sf.getCurrentSession();
 		String hql = "from maps.hibernate.BusLineHibernateImpl as o where line = :line";
 		@SuppressWarnings("unchecked")
 		Query<BusLineHibernateImpl> query = session.createQuery(hql);
 		query.setParameter("line", line);
-		return query.getSingleResult();
+		try
+		{
+			return query.getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+			return null;
+		}
 
 	}
 

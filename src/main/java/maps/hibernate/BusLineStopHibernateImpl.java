@@ -2,9 +2,6 @@ package maps.hibernate;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import maps.interfaces.BusLine;
 import maps.interfaces.BusLineStop;
 import maps.interfaces.BusStop;

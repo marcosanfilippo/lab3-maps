@@ -25,6 +25,7 @@ Boolean debug = ( request.getParameter("debug") != null);
 <body>
 
 	<jsp:include page="partial/_navbar.jsp" />
+	<div id="msg"></div>
 	<div class="container">
 		<div id="mapid"></div>
 	</div>
@@ -85,22 +86,62 @@ Boolean debug = ( request.getParameter("debug") != null);
 	{
 		$.ajax({
 				type: "GET",
-				url: "getNear.do?srcLat="+latLngSrc.lat+"&srcLng="+latLngSrc.lng+"&dstLat="+latLngDst.lat+"&dstLng="+latLngDst.lng,
+				url: "getRoute.do?srcLat="+latLngSrc.lat+"&srcLng="+latLngSrc.lng+"&dstLat="+latLngDst.lat+"&dstLng="+latLngDst.lng,
 				dataType: 'json',
 				success: function(data, textStatus, jqXHR)
 				{
-					$.each(data,function(stop_index,stop)
-							{
-								msg = "Fermata <b>"+stop.name.replace("'","\'")+" "+stop.lat+" "+stop.lng+"</b><br>";
-								//$.each(stop.lines,function(line_index,line))
-								//{
-								//	msg += "Linea <b>"+line.name+"</b> ("+line.description+")<br>";
-								//}
-								L.marker([stop.lat,stop.lng],{icon: stopIcon}).addTo(mymap)
-									.bindPopup(msg);
-							});
-					//polyline = L.polyline(latlngs, {color: 'red'}).addTo(mymap);
-					//mymap.fitBounds(polyline.getBounds());
+					prev = latLngSrc;
+					prevLine = null;
+					prevStopName = data.route[0].stop.name;
+					first = true;
+					msg = "";
+					$.each(data.route,function(route_index,route)
+					{
+						stop = route.stop
+						msgPopup = "Fermata <b>"+stop.name+" ("+stop.id+")</b><br>";
+
+						act=L.latLng(stop.lat,stop.lng);
+						
+						L.marker(act,{icon: stopIcon}).addTo(mymap)
+							.bindPopup(msgPopup);
+						
+						if (first)
+						{
+							msg += "Cammina fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+							polyline = L.polyline([prev,act], {color: 'grey'}).addTo(mymap);
+							first = false;
+							prevLine = route.line;
+						}
+						
+						
+						if (    (prevLine == null && route.line != null ) ||
+								(prevLine != null && route.line == null ) || 
+								(prevLine != null && route.line != null && prevLine.line != route.line.line ) )
+						{
+							if ( prevLine != null ) msg += "Prendi la linea <b>"+prevLine.line+" ("+prevLine.description+")</b> fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+							else msg += "Cammina fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+							
+							prevLine = route.line;
+						}
+						
+						//Ultima fermata
+						if ( route.stop.id == data.destination.id )
+						{
+							msg += "Prendi la linea <b>"+route.line.line+" ("+route.line.description+")</b> fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+						}
+						
+						if ( route.line != null) c = 'red'; //By bus
+						else c = 'grey'; //By foot
+						
+						polyline = L.polyline([prev,act], {color: c}).addTo(mymap);
+						prev=act;	
+						prevStopName = stop.name;						
+					});
+					
+					msg += "Cammina fino alla tua destinazione<br>";
+					polyline = L.polyline([prev,latLngDst], {color: 'grey'}).addTo(mymap);
+					
+					$("#msg").html(msg);
 				},
 				error: function (jqXHR, textStatus, errorThrown)
 				{
@@ -114,7 +155,7 @@ Boolean debug = ( request.getParameter("debug") != null);
 	{
 		BusStopService busStopService = (BusStopService) request.getServletContext().getAttribute("busStopService");
 	
-		for(Entry e : busStopService.getAll().entrySet())
+		for(Entry<String,BusStop> e : busStopService.getAll().entrySet())
 		{
 			BusStop bs =  (BusStop)e.getValue();
 			String msg = "Fermata <b>"+bs.getName().replace("'","\\'")+" "+bs.getLat()+" "+bs.getLng()+"</b><br>";

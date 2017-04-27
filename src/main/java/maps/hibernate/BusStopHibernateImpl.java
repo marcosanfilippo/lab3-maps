@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Type;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -35,8 +33,6 @@ create table if not exists BusLineStop (
   foreign key (lineId) references BusLine(line)
 );
  */
-
-//TODO double precision
 
 @Entity
 @Table(name="BusStop")
@@ -94,24 +90,21 @@ public class BusStopHibernateImpl implements BusStop {
 	@Override
 	public Double getLat() {
 		return latLng.getCoordinate().x;
-		//return latLng.getPosition().getCoordinate(0);
 	}
 
 	@Override
 	public void setLat(Double _lat) {
-		//TODO
+		setLatLng(_lat,getLng());
 	}
 
 	@Override
 	public Double getLng() {
 		return latLng.getCoordinate().y;
-
-		//return latLng.getPosition().getCoordinate(1);
 	}
 
 	@Override
 	public void setLng(Double _lng) {
-		//TODO
+		setLatLng(getLat(),_lng);
 	}
 	
 	@Override

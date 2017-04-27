@@ -1,18 +1,16 @@
-package maps.hibernate.service;
+package maps.service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.TemporalType;
+import javax.persistence.NoResultException;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
@@ -46,7 +44,20 @@ public class BusStopServiceHibernateImpl implements BusStopService {
 
 	@Override
 	public BusStop getBusStop(String id) {
-		return null;
+		Session session=sf.getCurrentSession();
+		String hql = "from maps.hibernate.BusStopHibernateImpl as o where id= :id";
+		@SuppressWarnings("unchecked")
+		Query<BusStopHibernateImpl> query = session.createQuery(hql);
+		query.setParameter("id", id);
+		try
+		{
+			return query.getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public void addBusStop(BusStop bs )
@@ -56,17 +67,17 @@ public class BusStopServiceHibernateImpl implements BusStopService {
 	@Override
 	public List<BusStopHibernateImpl> getBusStopNear(Point location, Double radiusMeters)
 	{
-		
-		/*Session session=sf.getCurrentSession();
+		Session session=sf.getCurrentSession();
 		String hql = "from maps.hibernate.BusStopHibernateImpl as o where dwithin(o.latLng, :point,:radius) = true";
 		@SuppressWarnings("unchecked")
 		Query<BusStopHibernateImpl> query = session.createQuery(hql);
 		query.setParameter("point", location);
 		query.setParameter("radius", radiusMeters);
 
-		return query.getResultList();*/
+		return query.getResultList();
 		
-		//TODO OOOOOOOOO
+		
+		/*
 		Session session=sf.getCurrentSession();
 		String hql = "from maps.hibernate.BusStopHibernateImpl as o where dwithin(o.latLng, ST_GeographyFromText('SRID=4326; "+location.toText()+"'),:radius) = true";
 		@SuppressWarnings("unchecked")
@@ -74,6 +85,7 @@ public class BusStopServiceHibernateImpl implements BusStopService {
 		//query.setParameter("point", location);
 		query.setParameter("radius", radiusMeters);
 		return query.getResultList();
+		*/
 	}
 	
 	@Override

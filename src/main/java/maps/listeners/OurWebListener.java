@@ -5,16 +5,15 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import maps.hibernate.service.BusLineServiceHibernateImpl;
-import maps.hibernate.service.BusStopServiceHibernateImpl;
+import maps.service.BusLineServiceHibernateImpl;
+import maps.service.BusRouteServiceImpl;
+import maps.service.BusStopServiceHibernateImpl;
 
 @WebListener
 public class OurWebListener implements ServletContextListener {
 
 	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void contextDestroyed(ServletContextEvent arg0) {		
 	}
 
 	@Override
@@ -26,8 +25,12 @@ public class OurWebListener implements ServletContextListener {
 			
 			BusLineServiceHibernateImpl busLineServiceImpl = new BusLineServiceHibernateImpl();
 			BusStopServiceHibernateImpl busStopServiceImpl = new BusStopServiceHibernateImpl();
-		    sce.getServletContext().setAttribute("busStopService", busStopServiceImpl);
+			BusRouteServiceImpl busRouteServiceImpl = new BusRouteServiceImpl();
+
+			sce.getServletContext().setAttribute("busStopService", busStopServiceImpl);
 		    sce.getServletContext().setAttribute("busLineService", busLineServiceImpl);			
+		    sce.getServletContext().setAttribute("busRouteService", busRouteServiceImpl);			
+
 		}
 		catch(Exception e)
 		{
