@@ -1,14 +1,11 @@
 package maps.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import maps.interfaces.BusRouteService;
 import maps.interfaces.BusStop;
-import maps.interfaces.BusStopService;
-import maps.route.Edge;
 import maps.route.MinPath;
+import maps.utils.MongoHandler;
 
 public class BusRouteServiceImpl implements BusRouteService {
 
@@ -17,12 +14,14 @@ public class BusRouteServiceImpl implements BusRouteService {
 		return getRoute(from,to,Integer.MAX_VALUE);
 	}
 
-	public MinPath getRoute(BusStop from, BusStop to, int maxCost) {
-		//TODO real implementation
+	public MinPath getRoute(BusStop from, BusStop to, int maxCost) {		
 		
+		return MongoHandler.getInstance("trasporti")
+				.getMinPath(from.getId(),
+							to.getId(),
+							maxCost);
 		
-		
-		//Dummy
+		/*
 		BusStopService busStopService = new BusStopServiceHibernateImpl();
 		
 		MinPath mp = new MinPath();
@@ -60,6 +59,7 @@ public class BusRouteServiceImpl implements BusRouteService {
 		mp.setTotalCost(cost);
 		
 		return mp;
+		*/
 	}
 	
 	@Override

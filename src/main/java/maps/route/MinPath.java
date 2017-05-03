@@ -33,6 +33,7 @@ public class MinPath {
 	 * */
 	private int totalCost;
 	
+	
 	public String getIdSource() {
 		return idSource;
 	}
