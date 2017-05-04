@@ -16,7 +16,7 @@ public class BusRouteServiceImpl implements BusRouteService {
 
 	public MinPath getRoute(BusStop from, BusStop to, int maxCost) {		
 		
-		return MongoHandler.getInstance("trasporti")
+		return MongoHandler.getInstance("percorsi")
 				.getMinPath(from.getId(),
 							to.getId(),
 							maxCost);

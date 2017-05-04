@@ -59,14 +59,17 @@ public class MongoHandler {
 		MongoCursor<Document> cursor =  md.getCollection("percorsi")
 					.find(
 							com.mongodb.client.model.Filters.and(
-							com.mongodb.client.model.Filters.eq("sourceID", idSource), 
-							com.mongodb.client.model.Filters.eq("destinationID", idDestination),
-							com.mongodb.client.model.Filters.lt("cost", minCost)
-						)
+								com.mongodb.client.model.Filters.eq("sourceID", idSource), 
+								com.mongodb.client.model.Filters.eq("destinationID", idDestination),
+								com.mongodb.client.model.Filters.lt("cost", minCost)
+							)
 					).iterator();
 		
-		Document d = cursor.next();
-		
-		return getMinPath(d);
+		//MongoCursor<Document> cursor =  md.getCollection("percorsi").find().iterator();		
+		if ( cursor.hasNext() )
+		{
+			return getMinPath(cursor.next());
+		}
+		else return null;
 	}
 }

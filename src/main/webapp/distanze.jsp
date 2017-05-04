@@ -90,6 +90,11 @@ Boolean debug = ( request.getParameter("debug") != null);
 				dataType: 'json',
 				success: function(data, textStatus, jqXHR)
 				{
+					if ( !data.source || !data.destination || !data.route )
+					{
+						alert("Nessun percorso trovato =(");
+						return;
+					}
 					prev = latLngSrc;
 					prevLine = null;
 					prevStopName = data.route[0].stop.name;
@@ -127,7 +132,14 @@ Boolean debug = ( request.getParameter("debug") != null);
 						//Ultima fermata
 						if ( route.stop.id == data.destination.id )
 						{
-							msg += "Prendi la linea <b>"+route.line.line+" ("+route.line.description+")</b> fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+							if ( route.line )
+							{
+								msg += "Prendi la linea <b>"+route.line.line+" ("+route.line.description+")</b> fino alla fermata <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";
+							}
+							else
+							{
+								msg += "Cammina fino a <b>"+stop.name+" N."+stop.id+"</b> (?? metri)<br>";								
+							}
 						}
 						
 						if ( route.line != null) c = 'red'; //By bus
